@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ora de Istorie - Enciclopedie Digitală | Creat de Yanis Elisei</title>
+    <style>
+        :root {
+            --primary-color: #78350f; /* Nuanță de maro / pergament */
+            --secondary-color: #b45309;
+            --accent-color: #d97706;
+            --bg-color: #fef3c7;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .creator-badge {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        nav {
+            background-color: #451a03;
+            color: white;
+            padding: 0.9rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 12px;
+            font-weight: 600;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            color: #fde047;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Bara de căutare */
+        .search-container {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            text-align: center;
+            border-top: 4px solid var(--accent-color);
+        }
+
+        .search-container input {
+            width: 100%;
+            max-width: 600px;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            border: 2px solid #d1d5db;
+            border-radius: 30px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input:focus {
+            border-color: var(--secondary-color);
+        }
+
+        .hero-section {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .hero-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            margin: 2.5rem 0 1.5rem 0;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .article-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid var(--secondary-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .article-img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+        }
+
+        .article-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .article-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .article-card p {
+            color: #4b5563;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* Fereastră modală pentru citirea lecției */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 2.5rem;
+            border-radius: 10px;
+            max-width: 800px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        .modal-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .modal-content p {
+            color: #374151;
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Secțiunea de curiozități */
+        .trivia-box {
+            background-color: #ffedd5;
+            border-left: 5px solid #ea580c;
+            padding: 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+        }
+
+        .trivia-box h3 {
+            color: #c2410c;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Test interactiv / Quiz */
+        .quiz-section {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-top: 3rem;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .quiz-question-box {
+            margin-bottom: 1.8rem;
+            background: #fafaf9;
+            padding: 1.2rem;
+            border-radius: 8px;
+            border: 1px solid #e7e5e4;
+        }
+
+        .quiz-question {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+        }
+
+        .quiz-options label:hover {
+            background-color: #f3f4f6;
+        }
+
+        #quiz-result {
+            margin-top: 1.5rem;
+            font-weight: bold;
+            padding: 1rem;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+        }
+
+        /* Secțiunea de contact */
+        .contact-section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .contact-section form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 1.5rem auto 0 auto;
+        }
+
+        .contact-section input, .contact-section textarea {
+            padding: 0.8rem;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        footer {
+            background-color: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .signature {
+            color: #fde047;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📜 Ora de Istorie</h1>
+        <p>Călătorește în timp și descoperă cele mai importante momente ale omenirii.</p>
+        <div class="creator-badge">✨ Un site creat de Yanis Elisei</div>
+    </header>
+
+    <nav>
+        <a href="#acasa">Acasă</a>
+        <a href="#lectii">Lecții</a>
+        <a href="#curiozitati">Curiozități</a>
+        <a href="#quiz">Testează-ți cunoștințele</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="container">
+        <!-- Bara de căutare live -->
+        <div class="search-container">
+            <h3 style="color: var(--primary-color); margin-bottom: 0.8rem;">🔍 Caută lecții sau subiecte istorice</h3>
+            <input type="text" id="searchInput" placeholder="Tastează un cuvânt (ex: roman, daci, rege, război, unire)..." onkeyup="cautaArticole()">
+        </div>
+
+        <!-- Acasă -->
+        <section class="hero-section" id="acasa">
+            <h2>Bine ați venit pe portalul de istorie!</h2>
+            <p>Acest spațiu digital a fost creat din pasiune pentru trecut de <strong>Yanis Elisei</strong>. Aici găsești lecții detaliate, imagini și posibilitatea de a-ți testa cunoștințele. Răsfoiește articolele de mai jos!</p>
+        </section>
+
+        <!-- Lecții -->
+        <h2 class="section-title" id="lectii">📚 Lecții de Istorie</h2>
+        <section class="articles-grid" id="articlesGrid">
+            
+            <div class="article-card" data-title="daci romani dacia traian">
+                <img src="https://images.unsplash.com/photo-1599839575945-a9e5af0c3fae?auto=format&fit=crop&w=600&q=80" alt="Daci și Romani" class="article-img">
+                <div class="article-body">
+                    <div>
+                        <h3>Antichitatea: Daci și Romani</h3>
+                        <p>Conflictul epic dintre Imperiul Roman și daci a condus la formarea poporului român. Descoperă strategiile lui Decebal și armatele lui Traian.</p>
+                    </div>
+                    <button class="btn" onclick="deschideLecpie('Antichitatea: Daci și Romani', 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fae?auto=format&fit=crop&w=800&q=80', 'Geții și dacii au format o ramură puternică a tracilor, remarcându-se prin vitejie și organizare statală, în special sub regele Burebista și regele Decebal.\n\nÎn urma războaielor purtate cu împăratul roman Traian (101-102 și 105-106 d.Hr.), o parte din Dacia a devenit provincie romană. Prin romanizarea dacilor s-a format poporul român și limba noastră latină.')">Citește lecția completă</button>
+                </div>
+            </div>
+
+            <div class="article-card" data-title="imperiul roman romei antichitate">
+                <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=600&q=80" alt="Imperiul Roman" class="article-img">
+                <div class="article-body">
+                    <div>
+                        <h3>Antichitatea: Imperiul Roman</h3>
+                        <p>Ascensiunea și declinul uneia dintre cele mai mari civilizații din istoria lumii, de la întemeierea Romei până la căderea sa.</p>
+                    </div>
+                    <button class="btn" onclick="deschideLecpie('Antichitatea: Imperiul Roman', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80', 'Imperiul Roman a fost una dintre cele mai mari civilizații din istorie, pornind de la un mic oraș-stat și ajungând să domine întreg bazinul Mediteranei.\n\nRomanii au influențat lumea prin dreptul roman, arhitectură, rețele de drumuri și o armată extraordinar de bine organizată. Imperiul de Apus s-a prăbușit în anul 476 d.Hr.')">Citește lecția completă</button>
+                </div>
+            </div>
+
+            <div class="article-card" data-title="evul mediu castele cavalerie feudalism">
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80" alt="Castele Medievale" class="article-img">
+                <div class="article-body">
+                    <div>
+                        <h3>Evul Mediu: Castele și Cavalerie</h3>
+                        <p>O incursiune fascinantă în lumea feudală, cruciade, castele fortificate și viața de zi cu zi a cavalerilor din Evul Mediu.</p>
+                    </div>
+                    <button class="btn" onclick="deschideLecpie('Evul Mediu: Castele și Cavalerie', 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80', 'Evul Mediu a fost dominat de sistemul feudal, în care nobilii stăpâneau pământurile, iar cavalerii asigurau protecția militară respectând un cod strict de onoare.\n\nCastelele puternic fortificate au devenit simbolul acestei epoci, servind atât ca reședințe nobiliare, cât și ca bastioane de apărare împotriva invaziilor.')">Citește lecția completă</button>
+                </div>
+            </div>
+
+            <div class="article-card" data-title="revolutii moderna franceza industriala">
+                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80" alt="Revoluția Franceză" class="article-img">
+                <div class="article-body">
+                    <div>
+                        <h3>Epoca Modernă: Mari Revoluții</h3>
+                        <p>De la Revoluția Franceză la revoluțiile industriale care au transformat complet modul în care trăiește și muncește omenirea.</p>
+                    </div>
+                    <button class="btn" onclick="deschideLecpie('Epoca Modernă: Mari Revoluții', 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80', 'Revoluția Franceză din 1789 a dărâmat absolutismul monarhic sub lozinca „Libertate, Egalitate, Fraternitate”, schimbând drepturile fundamentale ale cetățenilor în Europa.\n\nÎn paralel, Revoluția Industrială a introdus mașinile cu abur și fabricile, transformând economia agrară într-una industrială modernă.')">Citește lecția completă</button>
+                </div>
+            </div>
+
+            <div class="article-card" data-title="razboiul rece secolul xx sua urss">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80" alt="Războiul Rece" class="article-img">
+                <div class="article-body">
+                    <div>
+                        <h3>Secolul XX: Războiul Rece</h3>
+                        <p>Lumea împărțită în două blocuri: SUA și URSS. O perioadă de maximă tensiune politică, cursa spațială și amenințarea nucleară.</p>
+                    </div>
+                    <button class="btn" onclick="deschideLecpie('Secolul XX: Războiul Rece', 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80', 'Războiul Rece a fost o confruntare ideologică și politică acută între lumea capitalistă condusă de SUA și blocul comunist condus de URSS.\n\nAceastă perioadă a generat o uriașă cursă a înarmărilor nucleare și celebra Cursă Spațială care a dus la cucerirea Lunii de către om.')">Citește lecția completă</button>
+                </div>
+            </div>
+
+            <div class="article-card" data-title="marea unire 1918 romania basarabia transilvania">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80" alt="Marea Unire" class="article-img">
+                <div class="article-body">
+                    <div>
+                        <h3>Marea Unire de la 1918</h3>
+                        <p>Momentul culminant al istoriei naționale românești, prin care Basarabia, Bucovina și Transilvania s-au unit cu Regatul României.</p>
+                    </div>
+                    <button class="btn" onclick="deschideLecpie('Marea Unire de la 1918', 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80', 'Anul 1918 a reprezentat unirea tuturor provinciilor istorice locuite de români în cadrul aceluiași stat: Basarabia (27 martie), Bucovina (28 noiembrie) și Transilvania (1 decembrie la Alba Iulia).')">Citește lecția completă</button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Curiozități -->
+        <h2 class="section-title" id="curiozitati">💡 Știați că... (Curiozități Istorice)</h2>
+        <div class="trivia-box">
+            <h3>Recordul celui mai scurt război din istorie</h3>
+            <p>A avut loc în 1896 între Marea Britanie și Zanzibar și a durat între 38 și 45 de minute! Zanzibarul s-a predat rapid în fața forței navale britanice.</p>
+        </div>
+        <div class="trivia-box">
+            <h3>Piramidele din Egipt</h3>
+            <p>Erau deja monumente antice extrem de vechi chiar și în perioada în care a trăit Cleopatra! Între construcția marilor piramide și viața ei a trecut mai mult timp decât între perioada ei și anul de astăzi.</p>
+        </div>
+
+        <!-- Test interactiv / Quiz -->
+        <section class="quiz-section" id="quiz">
+            <h2>🧠 Testează-ți cunoștințele de istorie!</h2>
+            <p style="margin-bottom: 1.5rem; color: #4b5563;">Răspunde corect la cele 2 întrebări de mai jos pentru a verifica ce ai reținut din lecțiile de pe site-ul lui Yanis Elisei:</p>
+            
+            <div class="quiz-question-box">
+                <div class="quiz-question">1. În ce an a avut loc Marea Unire a României?</div>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="a"> A) 1859</label>
+                    <label><input type="radio" name="q1" value="b"> B) 1918</label>
+                    <label><input type="radio" name="q1" value="c"> C) 1945</label>
+                </div>
+            </div>
+
+            <div class="quiz-question-box">
+                <div class="quiz-question">2. Cine a fost împăratul roman care a cucerit o parte din Dacia?</div>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q2" value="a"> A) Iulius Cezar</label>
+                    <label><input type="radio" name="q2" value="b"> B) Traian</label>
+                    <label><input type="radio" name="q2" value="c"> C) Nero</label>
+                </div>
+            </div>
+
+            <button class="btn" style="padding: 0.8rem 2rem;" onclick="verificaQuiz()">Verifică răspunsurile și scorul</button>
+            <div id="quiz-result"></div>
+        </section>
+
+        <!-- Contact / Sugestii -->
+        <section class="contact-section" id="contact">
+            <h2>Trimite o sugestie pentru site</h2>
+            <p>Vrei ca <strong>Yanis Elisei</strong> să adauge o anumită lecție sau un subiect istoric anume? Lasă un mesaj!</p>
+            <form onsubmit="alert('Mulțumesc! Mesajul tău a fost trimis către administratorul site-ului, Yanis Elisei.'); return false;">
+                <input type="text" placeholder="Numele tău" required>
+                <input type="email" placeholder="Adresa ta de email" required>
+                <textarea rows="4" placeholder="Ce subiect de istorie ai vrea să adăugăm?" required></textarea>
+                <button type="submit" class="btn">Trimite mesajul</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Fereastră modală pentru citit lecții complete -->
+    <div id="lectieModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="inchideLecția()">&times;</span>
+            <h2 id="modalTitle">Titlu lecție</h2>
+            <img id="modalImg" src="" alt="Imagine lecție">
+            <div id="modalText">Conținut lecție...</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Ora de Istorie. Toate drepturile rezervate.</p>
+        <p>Proiect realizat cu pasiune și creat de <span class="signature">Yanis Elisei</span>.</p>
+    </footer>
+
+    <script>
+        // Funcție de căutare live
+        function cautaArticole() {
+            let input = document.getElementById('
